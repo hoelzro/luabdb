@@ -38,6 +38,23 @@ static luaL_Reg luabdb_functions[] = {
 
 static void init_metatables(lua_State *L)
 {
+    const char *types[] = {
+        LUABDB_DB,
+        LUABDB_ENV,
+        LUABDB_CURSOR,
+        LUABDB_LOG,
+        LUABDB_MEMPOOL,
+        LUABDB_SEQ,
+        LUABDB_TXN,
+        NULL
+    };
+    const char **type;
+    for(type = types; *type; type++) {
+        luaL_newmetatable(L, *type);
+        lua_newtable(L);
+        lua_setfield(L, -2, "__index");
+        lua_pop(L, 1);
+    }
 }
 
 int luabdb_unimplemented(lua_State *L)
