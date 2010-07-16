@@ -48,4 +48,12 @@ void init_sequence_config(lua_State *L);
 void init_txn_ops(lua_State *L);
 void init_txn_config(lua_State *L);
 
+#define handle_error(status)\
+    if(status) {\
+        lua_pushnil(L);\
+        lua_pushstring(L, db_strerror(status));\
+        lua_pushinteger(L, status);\
+        return 3;\
+    }
+
 #endif
