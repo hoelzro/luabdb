@@ -24,6 +24,9 @@
 #define LUA_BDB_PRIVATE_H
 
 #include <lua.h>
+#include "luabdb.h"
+
+int luabdb_unimplemented(lua_State *L);
 
 void init_db_ops(lua_State *L);
 void init_db_config(lua_State *L);

@@ -40,6 +40,15 @@ static void init_metatables(lua_State *L)
 {
 }
 
+int luabdb_unimplemented(lua_State *L)
+{
+    lua_Debug ar;
+    lua_getstack(L, 0, &ar);
+    lua_getinfo(L, "n", &ar);
+
+    return luaL_error(L, "Function '%s' is not implemented!", ar.name);
+}
+
 int luaopen_bdb(lua_State *L)
 {
     const char *libraryName = luaL_checkstring(L, 1);
