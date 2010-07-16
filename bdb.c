@@ -163,6 +163,8 @@ static void init_metatables(lua_State *L)
         luaL_newmetatable(L, *type);
         lua_newtable(L);
         lua_setfield(L, -2, "__index");
+        lua_pushboolean(L, 0);
+        lua_setfield(L, -2, "__metatable");
         lua_pop(L, 1);
     }
 }
