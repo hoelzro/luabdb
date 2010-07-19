@@ -36,6 +36,15 @@ DB *luabdb_todb(lua_State *L, int narg)
     return *dbp;
 }
 
+DB_ENV *luabdb_toenv(lua_State *L, int narg)
+{
+    DB_ENV **envp = (DB_ENV **) luaL_checkudata(L, narg, LUABDB_ENV);
+    if(! *envp) {
+        luaL_error(L, "Attempt to use a closed DB_ENV handle (%p)", lua_topointer(L, narg));
+    }
+    return *envp;
+}
+
 /* must recieve an absolute index! */
 #define get_option(L, narg, name, fetch)\
     lua_getfield(L, narg, #name);\

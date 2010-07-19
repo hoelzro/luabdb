@@ -35,8 +35,8 @@
 #define LUABDB_TXN "DB_TXN*"
 
 DB *luabdb_todb(lua_State *L, int narg);
+DB_ENV *luabdb_toenv(lua_State *L, int narg);
 
-#define luabdb_toenv(L, narg) ((DB_ENV *) luaL_checkudata(L, narg, LUABDB_ENV))
 #define luabdb_tocursor(L, narg) ((DBC *) luaL_checkudata(L, narg, LUABDB_CURSOR))
 #define luabdb_tolog(L, narg) ((DB_LOGC *) luaL_checkudata(L, narg, LUABDB_LOG))
 #define luabdb_tomempool(L, narg) ((DB_MPOOLFILE *) luaL_checkudata(L, narg, LUABDB_MEMPOOL))
