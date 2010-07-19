@@ -10,4 +10,4 @@ macosx:
 	@make -f makefile.macosx
 
 clean:
-	rm -f *.o *.so
+	rm -f *.o *.so *.dylib
