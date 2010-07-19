@@ -28,6 +28,7 @@
 
 int luabdb_unimplemented(lua_State *L);
 
+void init_flags(lua_State *L);
 void init_db_ops(lua_State *L);
 void init_db_config(lua_State *L);
 void init_cursor_ops(lua_State *L);

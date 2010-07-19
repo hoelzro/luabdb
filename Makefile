@@ -5,6 +5,7 @@ OBJECTS = cursor_ops.o \
     db_ops.o \
     env_config.o \
     env_ops.o \
+    flags.o \
     lock_config.o \
     lock_ops.o \
     log_config.o \

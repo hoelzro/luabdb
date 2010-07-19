@@ -185,6 +185,7 @@ int luaopen_bdb(lua_State *L)
     luaL_register(L, libraryName, luabdb_functions);
 
     init_metatables(L);
+    init_flags(L);
     init_db_ops(L);
     init_db_config(L);
     init_cursor_ops(L);
