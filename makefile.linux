@@ -27,6 +27,3 @@ bdb.so: $(OBJECTS)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c -fPIC $<
-
-clean:
-	rm -f *.o *.so
