@@ -85,11 +85,13 @@ static int db_op_get(lua_State *L)
 
 static int db_op_close(lua_State *L)
 {
-    DB *db;
+    DB **dbp;
     int flags = 0;
 
-    db = luabdb_todb(L, 1);
-    db->close(db, flags);
+    luabdb_todb(L, 1); /* for error checking */
+    dbp = (DB **) luaL_checkudata(L, 1, LUABDB_DB);
+    (*dbp)->close(*dbp, flags);
+    *dbp = NULL;
     return 0;
 }
 
