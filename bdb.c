@@ -158,8 +158,44 @@ static int luabdb_open(lua_State *L)
     return 1;
 }
 
+static int luabdb_openenv(lua_State *L)
+{
+    DB_ENV **envp;
+    int status;
+
+    const char *home = NULL;
+    u_int32_t flags = 0;
+    int mode;
+
+    if(! lua_isnoneornil(L, 1)) {
+        luaL_checktype(L, 1, LUA_TTABLE);
+
+        get_option(L, 1, home, luaL_checkstring);
+        get_option(L, 1, flags, luabdb_getflags);
+        get_option(L, 1, mode, luabdb_getmode);
+
+        lua_pushnil(L);
+        if(lua_next(L, 1)) {
+            return luaL_error(L, "Invalid option to bdb.open: %s", lua_tostring(L, -2));
+        }
+    }
+
+    envp = lua_newuserdata(L, sizeof(DB_ENV *));
+    luaL_getmetatable(L, LUABDB_ENV);
+    lua_setmetatable(L, -2);
+
+    status = db_env_create(envp, 0);
+    handle_error(status);
+
+    status = (*envp)->open(*envp, home, flags, mode);
+    handle_error(status);
+
+    return 1;
+}
+
 static luaL_Reg luabdb_functions[] = {
     { "open", luabdb_open },
+    { "openenv", luabdb_openenv },
     { NULL, NULL }
 };
 
