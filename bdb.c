@@ -100,7 +100,7 @@ static int luabdb_getmode(lua_State *L, int narg)
 
 static int luabdb_open(lua_State *L)
 {
-    DB *db;
+    DB **dbp;
     int status;
 
     DB_ENV *env = NULL;
@@ -128,15 +128,14 @@ static int luabdb_open(lua_State *L)
         }
     }
 
-    db = lua_newuserdata(L, sizeof(DB *));
+    dbp = lua_newuserdata(L, sizeof(DB *));
     luaL_getmetatable(L, LUABDB_DB);
     lua_setmetatable(L, -2);
 
-    status = db_create(&db, env, 0);
+    status = db_create(dbp, env, 0);
     handle_error(status);
-    status = db->open(db, txn, file, database, type, flags, mode);
+    status = (*dbp)->open(*dbp, txn, file, database, type, flags, mode);
     handle_error(status);
-    lua_pushnil(L);
 
     return 1;
 }

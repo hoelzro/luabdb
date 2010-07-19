@@ -31,7 +31,7 @@
 #define LUABDB_SEQ "DB_SEQUENCE*"
 #define LUABDB_TXN "DB_TXN*"
 
-#define luabdb_todb(L, narg) ((DB *) luaL_checkudata(L, narg, LUABDB_DB))
+#define luabdb_todb(L, narg) (*((DB **) luaL_checkudata(L, narg, LUABDB_DB)))
 #define luabdb_toenv(L, narg) ((DB_ENV *) luaL_checkudata(L, narg, LUABDB_ENV))
 #define luabdb_tocursor(L, narg) ((DBC *) luaL_checkudata(L, narg, LUABDB_CURSOR))
 #define luabdb_tolog(L, narg) ((DB_LOGC *) luaL_checkudata(L, narg, LUABDB_LOG))
