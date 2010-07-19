@@ -182,9 +182,19 @@ static luaL_Reg db_funcs[] = {
 };
 #undef _
 
+static int db__gc(lua_State *L)
+{
+    lua_pushcfunction(L, db_op_close);
+    lua_pushvalue(L, 1);
+    lua_pcall(L, 1, 0, 0);
+    return 0;
+}
+
 int init_db_ops(lua_State *L)
 {
     luaL_getmetatable(L, LUABDB_DB);
+    lua_pushcfunction(L, db__gc);
+    lua_setfield(L, -2, "__gc");
     lua_getfield(L, -1, "__index");
     luaL_register(L, NULL, db_funcs);
 
