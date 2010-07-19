@@ -1,0 +1,10 @@
+include config.mk
+
+CFLAGS+=-I/opt/local/include -I/opt/local/include/db46
+LINKFLAGS+=-L/opt/local/lib -L/opt/local/lib/db46
+
+bdb.dylib: $(OBJECTS)
+	gcc -o bdb.dylib -bundle -undefined dynamic_lookup $^ -ldb $(LINKFLAGS)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c -fPIC $<
