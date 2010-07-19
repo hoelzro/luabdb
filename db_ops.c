@@ -181,6 +181,7 @@ static luaL_Reg db_funcs[] = {
     { NULL, NULL }
 };
 #undef _
+#undef u_
 
 static int db__gc(lua_State *L)
 {
