@@ -22,7 +22,49 @@
 
 #include "luabdb_private.h"
 
+#include <db.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
+static int env_op_close(lua_State *L)
+{
+    return 0;
+}
+
+#define _(name) { #name, env_op_##name }
+#define u_(name) { #name, luabdb_unimplemented }
+
+static luaL_Reg env_funcs[] = {
+    _(close),
+    { NULL, NULL }
+};
+
+#undef _
+#undef u_
+
+static int env__gc(lua_State *L)
+{
+    lua_pushcfunction(L, env_op_close);
+    lua_pushvalue(L, 1);
+    lua_pcall(L, 1, 0, 0);
+    return 0;
+}
+
+static int env__tostring(lua_State *L)
+{
+    lua_pushfstring(L, "env: %p", lua_topointer(L, 1));
+    return 1;
+}
+
 int init_env_ops(lua_State *L)
 {
+    luaL_getmetatable(L, LUABDB_ENV);
+    lua_pushcfunction(L, env__gc);
+    lua_setfield(L, -2, "__gc");
+    lua_pushcfunction(L, env__tostring);
+    lua_setfield(L, -2, "__tostring");
+    lua_getfield(L, -1, "__index");
+    luaL_register(L, NULL, env_funcs);
+
     return 0;
 }
