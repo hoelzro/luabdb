@@ -22,6 +22,7 @@
 
 #include "luabdb_private.h"
 
-void init_replication_config(lua_State *L)
+int init_replication_config(lua_State *L)
 {
+    return 0;
 }

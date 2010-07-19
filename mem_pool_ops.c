@@ -23,6 +23,7 @@
 /* we might not even need a memory pool! */
 #include "luabdb_private.h"
 
-void init_memory_pool_ops(lua_State *L)
+int init_memory_pool_ops(lua_State *L)
 {
+    return 0;
 }

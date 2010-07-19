@@ -256,7 +256,7 @@ struct flag_spec flags[] = {
 };
 #undef _
 
-void init_flags(lua_State *L)
+int init_flags(lua_State *L)
 {
     struct flag_spec *fs;
 
@@ -265,5 +265,6 @@ void init_flags(lua_State *L)
         lua_pushinteger(L, fs->value);
         lua_setfield(L, -2, fs->name);
     }
-    lua_setfield(L, -2, "flags");
+    lua_setfield(L, 1, "flags");
+    return 0;
 }

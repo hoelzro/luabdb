@@ -22,6 +22,7 @@
 
 #include "luabdb_private.h"
 
-void init_lock_config(lua_State *L)
+int init_lock_config(lua_State *L)
 {
+    return 0;
 }

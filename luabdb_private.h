@@ -28,26 +28,26 @@
 
 int luabdb_unimplemented(lua_State *L);
 
-void init_flags(lua_State *L);
-void init_db_ops(lua_State *L);
-void init_db_config(lua_State *L);
-void init_cursor_ops(lua_State *L);
-void init_env_ops(lua_State *L);
-void init_env_config(lua_State *L);
-void init_lock_ops(lua_State *L);
-void init_lock_config(lua_State *L);
-void init_log_ops(lua_State *L);
-void init_log_config(lua_State *L);
-void init_memory_pool_ops(lua_State *L);
-void init_memory_pool_config(lua_State *L);
-void init_mutex_ops(lua_State *L);
-void init_mutex_config(lua_State *L);
-void init_replication_ops(lua_State *L);
-void init_replication_config(lua_State *L);
-void init_sequence_ops(lua_State *L);
-void init_sequence_config(lua_State *L);
-void init_txn_ops(lua_State *L);
-void init_txn_config(lua_State *L);
+int init_flags(lua_State *L);
+int init_db_ops(lua_State *L);
+int init_db_config(lua_State *L);
+int init_cursor_ops(lua_State *L);
+int init_env_ops(lua_State *L);
+int init_env_config(lua_State *L);
+int init_lock_ops(lua_State *L);
+int init_lock_config(lua_State *L);
+int init_log_ops(lua_State *L);
+int init_log_config(lua_State *L);
+int init_memory_pool_ops(lua_State *L);
+int init_memory_pool_config(lua_State *L);
+int init_mutex_ops(lua_State *L);
+int init_mutex_config(lua_State *L);
+int init_replication_ops(lua_State *L);
+int init_replication_config(lua_State *L);
+int init_sequence_ops(lua_State *L);
+int init_sequence_config(lua_State *L);
+int init_txn_ops(lua_State *L);
+int init_txn_config(lua_State *L);
 
 #define handle_error(status)\
     if(status) {\

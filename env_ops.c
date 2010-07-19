@@ -22,6 +22,7 @@
 
 #include "luabdb_private.h"
 
-void init_env_ops(lua_State *L)
+int init_env_ops(lua_State *L)
 {
+    return 0;
 }

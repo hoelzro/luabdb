@@ -146,7 +146,7 @@ static luaL_Reg luabdb_functions[] = {
     { NULL, NULL }
 };
 
-static void init_metatables(lua_State *L)
+static int init_metatables(lua_State *L)
 {
     const char *types[] = {
         LUABDB_DB,
@@ -167,6 +167,7 @@ static void init_metatables(lua_State *L)
         lua_setfield(L, -2, "__metatable");
         lua_pop(L, 1);
     }
+    return 0;
 }
 
 int luabdb_unimplemented(lua_State *L)
@@ -180,31 +181,41 @@ int luabdb_unimplemented(lua_State *L)
 
 int luaopen_bdb(lua_State *L)
 {
+    lua_CFunction init_funcs[] = {
+        init_metatables,
+        init_flags,
+        init_db_ops,
+        init_db_config,
+        init_cursor_ops,
+        init_env_ops,
+        init_env_config,
+        init_lock_ops,
+        init_lock_config,
+        init_log_ops,
+        init_log_config,
+        init_memory_pool_ops,
+        init_memory_pool_config,
+        init_mutex_ops,
+        init_mutex_config,
+        init_replication_ops,
+        init_replication_config,
+        init_sequence_ops,
+        init_sequence_config,
+        init_txn_ops,
+        init_txn_config,
+        NULL
+    };
+    lua_CFunction *init_func;
+
     const char *libraryName = luaL_checkstring(L, 1);
     lua_newtable(L);
     luaL_register(L, libraryName, luabdb_functions);
 
-    init_metatables(L);
-    init_flags(L);
-    init_db_ops(L);
-    init_db_config(L);
-    init_cursor_ops(L);
-    init_env_ops(L);
-    init_env_config(L);
-    init_lock_ops(L);
-    init_lock_config(L);
-    init_log_ops(L);
-    init_log_config(L);
-    init_memory_pool_ops(L);
-    init_memory_pool_config(L);
-    init_mutex_ops(L);
-    init_mutex_config(L);
-    init_replication_ops(L);
-    init_replication_config(L);
-    init_sequence_ops(L);
-    init_sequence_config(L);
-    init_txn_ops(L);
-    init_txn_config(L);
+    for(init_func = init_funcs; *init_func; init_func++) {
+        lua_pushcfunction(L, *init_func);
+        lua_pushvalue(L, -2);
+        lua_call(L, 1, 0);
+    }
 
     return 1;
 }
