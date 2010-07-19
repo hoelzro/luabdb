@@ -27,6 +27,15 @@
 
 #include "luabdb_private.h"
 
+DB *luabdb_todb(lua_State *L, int narg)
+{
+    DB **dbp = (DB **) luaL_checkudata(L, narg, LUABDB_DB);
+    if(! *dbp) {
+        luaL_error(L, "Attempt to use a closed DB handle (%p)", lua_topointer(L, narg));
+    }
+    return *dbp;
+}
+
 /* must recieve an absolute index! */
 #define get_option(L, narg, name, fetch)\
     lua_getfield(L, narg, #name);\
