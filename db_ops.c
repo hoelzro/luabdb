@@ -190,11 +190,19 @@ static int db__gc(lua_State *L)
     return 0;
 }
 
+static int db__tostring(lua_State *L)
+{
+    lua_pushfstring(L, "db: %p", lua_topointer(L, 1));
+    return 1;
+}
+
 int init_db_ops(lua_State *L)
 {
     luaL_getmetatable(L, LUABDB_DB);
     lua_pushcfunction(L, db__gc);
     lua_setfield(L, -2, "__gc");
+    lua_pushcfunction(L, db__tostring);
+    lua_setfield(L, -2, "__tostring");
     lua_getfield(L, -1, "__index");
     luaL_register(L, NULL, db_funcs);
 
