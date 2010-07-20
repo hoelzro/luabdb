@@ -28,6 +28,13 @@
 
 static int env_op_close(lua_State *L)
 {
+    DB_ENV **envp;
+    u_int32_t flags = 0;
+
+    luabdb_toenv(L, 1); /* for error checking */
+    envp = (DB_ENV **) luaL_checkudata(L, 1, LUABDB_ENV);
+    (*envp)->close(*envp, flags);
+    *envp = NULL;
     return 0;
 }
 
