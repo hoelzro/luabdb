@@ -27,6 +27,26 @@
 #include <lualib.h>
 #include <string.h>
 
+DB *luabdb_todb(lua_State *L, int narg)
+{
+    DB **dbp = (DB **) luaL_checkudata(L, narg, LUABDB_DB);
+    if(! *dbp) {
+        luaL_error(L, "Attempt to use a closed DB handle (%p)", lua_topointer(L, narg));
+    }
+    return *dbp;
+}
+
+DB **luabdb_createdbp(lua_State *L)
+{
+    DB **dbp;
+
+    dbp = lua_newuserdata(L, sizeof(DB *));
+    luaL_getmetatable(L, LUABDB_DB);
+    lua_setmetatable(L, -2);
+
+    return dbp;
+}
+
 static int db_op_put(lua_State *L)
 {
     DB *db;

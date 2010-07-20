@@ -26,6 +26,26 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+DB_ENV *luabdb_toenv(lua_State *L, int narg)
+{
+    DB_ENV **envp = (DB_ENV **) luaL_checkudata(L, narg, LUABDB_ENV);
+    if(! *envp) {
+        luaL_error(L, "Attempt to use a closed DB_ENV handle (%p)", lua_topointer(L, narg));
+    }
+    return *envp;
+}
+
+DB_ENV **luabdb_createenvp(lua_State *L)
+{
+    DB_ENV **envp;
+
+    envp = lua_newuserdata(L, sizeof(DB_ENV *));
+    luaL_getmetatable(L, LUABDB_ENV);
+    lua_setmetatable(L, -2);
+
+    return envp;
+}
+
 static int env_op_close(lua_State *L)
 {
     DB_ENV **envp;

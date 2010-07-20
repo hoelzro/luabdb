@@ -23,6 +23,7 @@
 #ifndef LUA_BDB_PRIVATE_H
 #define LUA_BDB_PRIVATE_H
 
+#include <db.h>
 #include <lua.h>
 #include "luabdb.h"
 
@@ -56,5 +57,8 @@ int init_txn_config(lua_State *L);
         lua_pushinteger(L, status);\
         return 3;\
     }
+
+DB **luabdb_createdbp(lua_State *L);
+DB_ENV **luabdb_createenvp(lua_State *L);
 
 #endif

@@ -27,24 +27,6 @@
 
 #include "luabdb_private.h"
 
-DB *luabdb_todb(lua_State *L, int narg)
-{
-    DB **dbp = (DB **) luaL_checkudata(L, narg, LUABDB_DB);
-    if(! *dbp) {
-        luaL_error(L, "Attempt to use a closed DB handle (%p)", lua_topointer(L, narg));
-    }
-    return *dbp;
-}
-
-DB_ENV *luabdb_toenv(lua_State *L, int narg)
-{
-    DB_ENV **envp = (DB_ENV **) luaL_checkudata(L, narg, LUABDB_ENV);
-    if(! *envp) {
-        luaL_error(L, "Attempt to use a closed DB_ENV handle (%p)", lua_topointer(L, narg));
-    }
-    return *envp;
-}
-
 /* must recieve an absolute index! */
 #define get_option(L, narg, name, fetch)\
     lua_getfield(L, narg, #name);\
@@ -146,9 +128,7 @@ static int luabdb_open(lua_State *L)
         }
     }
 
-    dbp = lua_newuserdata(L, sizeof(DB *));
-    luaL_getmetatable(L, LUABDB_DB);
-    lua_setmetatable(L, -2);
+    dbp = luabdb_createdbp(L);
 
     status = db_create(dbp, env, 0);
     handle_error(status);
@@ -180,9 +160,7 @@ static int luabdb_openenv(lua_State *L)
         }
     }
 
-    envp = lua_newuserdata(L, sizeof(DB_ENV *));
-    luaL_getmetatable(L, LUABDB_ENV);
-    lua_setmetatable(L, -2);
+    envp = luabdb_createenvp(L);
 
     status = db_env_create(envp, 0);
     handle_error(status);
