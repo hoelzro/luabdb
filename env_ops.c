@@ -26,35 +26,39 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+struct DB_ENV_wrapper {
+    DB_ENV *env;
+};
+
 DB_ENV *luabdb_toenv(lua_State *L, int narg)
 {
-    DB_ENV **envp = (DB_ENV **) luaL_checkudata(L, narg, LUABDB_ENV);
-    if(! *envp) {
+    struct DB_ENV_wrapper *wrapper = (struct DB_ENV_wrapper *) luaL_checkudata(L, narg, LUABDB_ENV);
+    if(! wrapper->env) {
         luaL_error(L, "Attempt to use a closed DB_ENV handle (%p)", lua_topointer(L, narg));
     }
-    return *envp;
+    return wrapper->env;
 }
 
 DB_ENV **luabdb_createenvp(lua_State *L)
 {
-    DB_ENV **envp;
+    struct DB_ENV_wrapper *wrapper;
 
-    envp = lua_newuserdata(L, sizeof(DB_ENV *));
+    wrapper = lua_newuserdata(L, sizeof(struct DB_ENV_wrapper));
     luaL_getmetatable(L, LUABDB_ENV);
     lua_setmetatable(L, -2);
 
-    return envp;
+    return &(wrapper->env);
 }
 
 static int env_op_close(lua_State *L)
 {
-    DB_ENV **envp;
+    struct DB_ENV_wrapper *wrapper;
     u_int32_t flags = 0;
 
     luabdb_toenv(L, 1); /* for error checking */
-    envp = (DB_ENV **) luaL_checkudata(L, 1, LUABDB_ENV);
-    (*envp)->close(*envp, flags);
-    *envp = NULL;
+    wrapper = (struct DB_ENV_wrapper *) luaL_checkudata(L, 1, LUABDB_ENV);
+    wrapper->env->close(wrapper->env, flags);
+    wrapper->env = NULL;
     return 0;
 }
 

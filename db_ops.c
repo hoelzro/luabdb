@@ -27,24 +27,29 @@
 #include <lualib.h>
 #include <string.h>
 
+struct DB_wrapper {
+    DB *db;
+};
+
 DB *luabdb_todb(lua_State *L, int narg)
 {
-    DB **dbp = (DB **) luaL_checkudata(L, narg, LUABDB_DB);
-    if(! *dbp) {
+    struct DB_wrapper *wrap = luaL_checkudata(L, narg, LUABDB_DB);
+
+    if(! wrap->db) {
         luaL_error(L, "Attempt to use a closed DB handle (%p)", lua_topointer(L, narg));
     }
-    return *dbp;
+    return wrap->db;
 }
 
 DB **luabdb_createdbp(lua_State *L)
 {
-    DB **dbp;
+    struct DB_wrapper *wrap;
 
-    dbp = lua_newuserdata(L, sizeof(DB *));
+    wrap = lua_newuserdata(L, sizeof(struct DB_wrapper));
     luaL_getmetatable(L, LUABDB_DB);
     lua_setmetatable(L, -2);
 
-    return dbp;
+    return &(wrap->db);
 }
 
 static int db_op_put(lua_State *L)
@@ -105,13 +110,13 @@ static int db_op_get(lua_State *L)
 
 static int db_op_close(lua_State *L)
 {
-    DB **dbp;
+    struct DB_wrapper *wrap;
     int flags = 0;
 
     luabdb_todb(L, 1); /* for error checking */
-    dbp = (DB **) luaL_checkudata(L, 1, LUABDB_DB);
-    (*dbp)->close(*dbp, flags);
-    *dbp = NULL;
+    wrap = (struct DB_wrapper *) luaL_checkudata(L, 1, LUABDB_DB);
+    wrap->db->close(wrap->db, flags);
+    wrap->db = NULL;
     return 0;
 }
 
